@@ -13,7 +13,7 @@ fn main() {
         .expect("unable to open the image file")
         .to_owned();
 
-    let image = load_image::<u8>(filename, true) / 255f32;
+    let image = load_image::<f32>(filename, true) / 255f32;
     let image_size = image.dims();
 
     // Magic numbers below brought to you by Fiddling Around Until It Works (tm).

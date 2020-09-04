@@ -35,6 +35,14 @@ Don't expect anything crazy here. 🙌
   ```bash
   cargo run --bin adaptive-threshold
   ```
+  
+- [histogram.rs](src/histogram.rs): Implements RGB histogram calculation as described in [Image editing using ArrayFire: Part 3](https://arrayfire.com/image-editing-using-arrayfire-part-3-2/).
+   Makes use of `slice()` and/or `index()` to obtain individual channels from an `Array<T>`.
+   Note that the path to the image is hard-coded, so it needs to be run from the repository root.
+   ```bash
+   cargo run --bin histogram
+   ```
+
 
 ## Installing ArrayFire
 

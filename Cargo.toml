@@ -25,6 +25,10 @@ path = "src/white_noise.rs"
 name = "adaptive-threshold"
 path = "src/adaptive_threshold.rs"
 
+[[bin]]
+name = "histogram"
+path = "src/histogram.rs"
+
 [dependencies]
 arrayfire = "3.7.0"
 half = "1.6.0"
