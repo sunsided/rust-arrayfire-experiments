@@ -1,4 +1,4 @@
-# ArrayFire Experiments in Rust
+# GPGPU Experiments in Rust with ArrayFire
 
 Toying around with / getting to know [arrayfire-rust](https://github.com/arrayfire/arrayfire-rust).
 Don't expect anything crazy here. 🙌
