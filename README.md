@@ -5,12 +5,13 @@ Don't expect anything crazy here. 🙌
 
 ## Example applications
 
-- [trivial.rs](src/trivial.rs): The simple example from the `arrayfire-rust` README:
+- [trivial.rs](src/trivial.rs): The simple example from the `arrayfire-rust` [README](https://github.com/arrayfire/arrayfire-rust/blob/master/README.md):
   ```bash
   cargo run --bin trivial
   ```
 
-- [conway.rs](src/conway.rs): [Conway's Game of Life](https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life) taken from the `arrayfire-rust` examples.
+- [conway.rs](src/conway.rs): GPU-enabled [Conway's Game of Life](https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life) through
+  kernel convolutions, taken from the `arrayfire-rust` examples with added documentation.
   Uses ArrayFire's graphics module to provide a window.
   ```bash
   cargo run --bin conway
