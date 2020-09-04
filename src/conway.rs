@@ -78,6 +78,12 @@ mod window_size {
     pub const HEIGHT: i32 = 512;
 }
 
+mod game_size {
+    pub const WIDTH: u64 = 256;
+    pub const HEIGHT: u64 = 256;
+    pub const CHANNELS: u64 = 3; // RGB
+}
+
 fn main() {
     set_device(0);
     info();
@@ -86,7 +92,7 @@ fn main() {
 
 /// Implements Conway's Game of Life as described in the module description.
 fn conways_game_of_life() {
-    // Constant values.
+    // Constant values. Note that `Dim4` is the dimension type available; values are [H, W, C, 1].
     let kernel = build_3x3_neighborhood_size_kernel();
     let const_2 = constant::<f32>(2.0, Dim4::new(&[1, 1, 1, 1])); // the value `2`
     let const_3 = constant::<f32>(3.0, Dim4::new(&[1, 1, 1, 1])); // the value `3`
@@ -132,15 +138,15 @@ fn determine_neighborhood_size(state: &Array<f32>, kernel: &Array<f32>) -> Array
 /// Creates the initial state by binarizing a uniform distribution.
 /// The resulting array is of shape (height, width, colors, ??)
 fn create_state() -> Array<f32> {
-    let state_dim = Dim4::new(&[256, 256, 3, 1]);
-    let random_state = randu::<f32>(state_dim);
+    let dims = Dim4::new(&[game_size::HEIGHT, game_size::WIDTH, game_size::CHANNELS, 1]);
+    let random_state = randu::<f32>(dims);
     binarize_state(random_state).cast::<f32>()
 }
 
 /// Takes a random floating-point state and applies a threshold to binarize it.
 fn binarize_state(state: Array<f32>) -> Array<bool> {
-    let binarization_threshold = constant::<f32>(0.5, Dim4::new(&[1, 1, 1, 1]));
-    gt(&state, &binarization_threshold, false)
+    let threshold = constant::<f32>(0.5, Dim4::new(&[1, 1, 1, 1]));
+    gt(&state, &threshold, false)
 }
 
 /// Normalize the specified array to be in range 0..1
