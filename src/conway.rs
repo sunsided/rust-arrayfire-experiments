@@ -72,6 +72,7 @@
 //! This is implemented below.
 
 use arrayfire::*;
+use std::time::SystemTime;
 
 mod window_size {
     pub const WIDTH: i32 = 512;
@@ -87,6 +88,12 @@ mod game_size {
 fn main() {
     set_device(0);
     info();
+
+    let seed = SystemTime::now()
+        .duration_since(SystemTime::UNIX_EPOCH)
+        .expect("Duration since UNIX_EPOCH failed");
+    set_seed(seed.as_secs());
+
     conways_game_of_life();
 }
 
@@ -100,16 +107,26 @@ fn conways_game_of_life() {
     // Initial state.
     let mut state = create_state();
 
+    let win = Window::new(
+        window_size::WIDTH,
+        window_size::HEIGHT,
+        "Game of Life".to_string(),
+    );
+
     // Game loop.
-    let win = Window::new(window_size::WIDTH, window_size::HEIGHT, "Game of Life".to_string());
     while !win.is_closed() {
         state = update_state(state, &kernel, &const_2, &const_3);
-        win.draw_image(&normalise(&state.cast::<f32>()), None);
+        win.draw_image(&normalise(&state), None);
     }
 }
 
 /// Updates the current state to the next state.
-fn update_state(state: Array<f32>, kernel: &Array<f32>, const_2: &Array<f32>, const_3: &Array<f32>) -> Array<f32> {
+fn update_state(
+    state: Array<f32>,
+    kernel: &Array<f32>,
+    const_2: &Array<f32>,
+    const_3: &Array<f32>,
+) -> Array<f32> {
     let neighborhood = determine_neighborhood_size(&state, &kernel);
     let can_exist = eq(&neighborhood, const_2, false);
     let must_exist = eq(&neighborhood, const_3, false);
@@ -121,12 +138,8 @@ fn build_3x3_neighborhood_size_kernel() -> Array<f32> {
     // Since the value of the a cell can be represented as 1 (live) and 0 (dead), using convolution
     // will give us the number of neighbors of any cell.
     // The center value of the kernel is 0 as we do not want to count the cell itself.
-    const H_KERNEL: [f32; 9] =
-        [1.0, 1.0, 1.0,
-         1.0, 0.0, 1.0,
-         1.0, 1.0, 1.0];
-
-    Array::new(&H_KERNEL, Dim4::new(&[3, 3, 1, 1]))
+    const KERNEL: [f32; 9] = [1.0, 1.0, 1.0, 1.0, 0.0, 1.0, 1.0, 1.0, 1.0];
+    Array::new(&KERNEL, Dim4::new(&[3, 3, 1, 1]))
 }
 
 /// Determines the neighborhood size using the state obtained from
