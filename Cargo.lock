@@ -146,6 +146,7 @@ name = "rust-arrayfire-experiments"
 version = "0.1.0"
 dependencies = [
  "arrayfire",
+ "half",
 ]
 
 [[package]]

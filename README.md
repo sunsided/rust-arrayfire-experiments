@@ -16,6 +16,13 @@ Don't expect anything crazy here. 🙌
   ```bash
   cargo run --bin conway
   ```
+  
+- [half_precision.rs](src/half_precision.rs): FP16 example using [half::f16](https://docs.rs/half/1.6.0/half/).
+  Doesn't work on my GTX 980 Ti (Compute 5.2) with CUDA 10, driver 450 so I cannot actually test it. I keeping it as
+  a bookmark anyways.
+  ```bash
+  cargo run --bin half-precision
+  ```
 
 ## Installing ArrayFire
 

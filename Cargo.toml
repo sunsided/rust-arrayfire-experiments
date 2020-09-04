@@ -13,5 +13,10 @@ path = "src/trivial.rs"
 name = "conway"
 path = "src/conway.rs"
 
+[[bin]]
+name = "half-precision"
+path = "src/half_precision.rs"
+
 [dependencies]
 arrayfire = "3.7.0"
+half = "1.6.0"
