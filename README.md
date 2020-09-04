@@ -62,6 +62,7 @@ From the [arrayfire-rust](https://github.com/arrayfire/arrayfire-rust) instructi
 
 ## Further reading
 
+- [The State of GPGPU in Rust](https://bheisler.github.io/post/state-of-gpgpu-in-rust/) (as of August 2018)
 - [ArrayFire Examples (Part 4 of 8) - Image Processing](https://arrayfire.com/arrayfire-examples-part-4-of-8-image-processing/)
 - [ArrayFire Examples (Part 5 of 8) - Machine Learning](https://arrayfire.com/arrayfire-examples-part-5-of-8-machine-learning/)
 - [ArrayFire Examples (Part 7 of 8) - Partial Differential Equations](https://arrayfire.com/arrayfire-examples-part-7-of-8-pde/)
