@@ -120,6 +120,8 @@ mod game {
     /// The `Game` struct holds game state for Conway's Game of Life.
     pub struct Game {
         neighborhood_kernel: Array<f32>,
+        value_0: Array<f32>,
+        value_1: Array<f32>,
         value_2: Array<f32>,
         value_3: Array<f32>,
         state: Array<f32>,
@@ -131,6 +133,8 @@ mod game {
         pub fn new(height: u64, width: u64, channels: u64) -> Self {
             // Constant values. Note that `Dim4` is the dimension type available; values are [H, W, C, 1].
             let kernel = Self::build_3x3_neighborhood_size_kernel();
+            let value_0 = constant::<f32>(0.0, Dim4::new(&[1, 1, 1, 1])); // the value `0`
+            let value_1 = constant::<f32>(1.0, Dim4::new(&[1, 1, 1, 1])); // the value `1`
             let value_2 = constant::<f32>(2.0, Dim4::new(&[1, 1, 1, 1])); // the value `2`
             let value_3 = constant::<f32>(3.0, Dim4::new(&[1, 1, 1, 1])); // the value `3`
 
@@ -139,9 +143,11 @@ mod game {
 
             Self {
                 neighborhood_kernel: kernel,
+                value_0,
+                value_1,
                 value_2,
                 value_3,
-                state,
+                state: state.cast::<f32>(),
             }
         }
 
@@ -150,7 +156,8 @@ mod game {
             let n_size = self.calculate_neighborhood_size();
             let can_exist = eq(&n_size, &self.value_2, false);
             let must_exist = eq(&n_size, &self.value_3, false);
-            self.state = &self.state * can_exist + must_exist;
+            let next_state = &self.state * can_exist + must_exist;
+            self.state = self.clamp_range(&next_state);
             &self.state
         }
 
@@ -178,12 +185,17 @@ mod game {
             Array::new(&KERNEL, Dim4::new(&[3, 3, 1, 1]))
         }
 
+        /// Clamps the value range of the specified state array to lie within 0..1.
+        fn clamp_range(&self, state: &Array<f32>) -> Array<f32> {
+            clamp(state, &self.value_0, &self.value_1, false)
+        }
+
         /// Creates the initial state by binarizing a uniform distribution.
         /// The resulting array is of shape (height, width, colors, ??)
-        fn create_state(height: u64, width: u64, channels: u64) -> Array<f32> {
+        fn create_state(height: u64, width: u64, channels: u64) -> Array<bool> {
             let dims = Dim4::new(&[height, width, channels, 1]);
             let random_state = randu::<f32>(dims);
-            Self::binarize_state(random_state).cast::<f32>()
+            Self::binarize_state(random_state)
         }
 
         /// Takes a random floating-point state and applies a threshold to binarize it.
