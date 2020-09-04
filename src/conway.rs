@@ -87,7 +87,7 @@ fn main() {
 ///
 /// ```pseudocode
 /// (neighbours <  2) || (neighbours >  3)    -> cell = 0
-/// (neighbours == 2) && (neighbours == 3)    -> cell = 1
+/// (neighbours == 2) || (neighbours == 3)    -> cell = 1
 /// ```
 ///
 /// However,
