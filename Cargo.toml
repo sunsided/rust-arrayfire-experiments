@@ -1,0 +1,17 @@
+[package]
+name = "rust-arrayfire-experiments"
+version = "0.1.0"
+authors = ["Markus Mayer <widemeadows@gmail.com>"]
+edition = "2018"
+default-run = "conway"
+
+[[bin]]
+name = "trivial"
+path = "src/trivial.rs"
+
+[[bin]]
+name = "conway"
+path = "src/conway.rs"
+
+[dependencies]
+arrayfire = "3.7.0"
