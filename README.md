@@ -61,6 +61,12 @@ From the [arrayfire-rust](https://github.com/arrayfire/arrayfire-rust) instructi
 >  
 >  Once step (4) is over, you should be able to use ArrayFire in your Rust project.
 
+## Further reading
+
+- [ArrayFire Examples (Part 4 of 8) - Image Processing](https://arrayfire.com/arrayfire-examples-part-4-of-8-image-processing/)
+- [ArrayFire Examples (Part 5 of 8) - Machine Learning](https://arrayfire.com/arrayfire-examples-part-5-of-8-machine-learning/)
+- [ArrayFire Examples (Part 7 of 8) - Partial Differential Equations](https://arrayfire.com/arrayfire-examples-part-7-of-8-pde/)
+
 ## License
 
 - [ArrayFire](https://arrayfire.com/the-arrayfire-library/) and [arrayfire-rust](https://github.com/arrayfire/arrayfire-rust)
