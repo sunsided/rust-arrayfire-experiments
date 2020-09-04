@@ -1,6 +1,7 @@
 //! This program renders three separate instances of Conway's Game of Life
 //! simultaneously as the R, G and B channels of an image.
-//! For the original article on the implementation, see Shehzan Mohammed's post [Conway's Game of Life using ArrayFire](https://arrayfire.com/conways-game-of-life-using-arrayfire/).
+//! For the original article on the implementation, see Shehzan Mohammed's post
+//! [Conway's Game of Life using ArrayFire](https://arrayfire.com/conways-game-of-life-using-arrayfire/).
 //!
 //! # Explanation of the Algorithm
 //!
