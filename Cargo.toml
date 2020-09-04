@@ -21,6 +21,10 @@ path = "src/half_precision.rs"
 name = "white-noise"
 path = "src/white_noise.rs"
 
+[[bin]]
+name = "adaptive-threshold"
+path = "src/adaptive_threshold.rs"
+
 [dependencies]
 arrayfire = "3.7.0"
 half = "1.6.0"

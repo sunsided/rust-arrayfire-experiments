@@ -29,6 +29,13 @@ Don't expect anything crazy here. 🙌
   cargo run --bin half-precision
   ```
 
+- [adaptive_threshold.rs](src/adaptive_threshold.rs): Implements three adaptive thresholding
+  techniques (mean, median and min-max average) as described in [Image editing using ArrayFire: Part 3](https://arrayfire.com/image-editing-using-arrayfire-part-3-2/).
+  Note that the path to the image is hard-coded, so it needs to be run from the repository root.
+  ```bash
+  cargo run --bin adaptive-threshold
+  ```
+
 ## Installing ArrayFire
 
 From the [arrayfire-rust](https://github.com/arrayfire/arrayfire-rust) instructions:
