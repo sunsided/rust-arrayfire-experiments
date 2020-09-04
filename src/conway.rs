@@ -52,10 +52,10 @@
 //! However,
 //!
 //! ```pseudocode
-//! (neighbours <  2) || (neighbours >  3) <=> !( neighbours == 2 && neighbours == 3 )
+//! (neighbours <  2) || (neighbours >  3) <=> !( neighbours == 2 || neighbours == 3 )
 //! ```
 //!
-//! Therefore, a conditions 2. and 3. are (almost) sufficient to determine all four outcomes.
+//! Therefore, conditions 2. and 3. are (almost) sufficient to determine all four outcomes.
 //! The missing piece is the current state of the cell:
 //!
 //! - As we know from observation B / condition 3, a cell will always exist if there are exactly
