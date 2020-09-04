@@ -150,7 +150,7 @@ fn determine_neighborhood_size(state: &Array<f32>, kernel: &Array<f32>) -> Array
 }
 
 /// Creates the initial state by binarizing a uniform distribution.
-/// The resulting array is of shape (height, width, colors, ??)
+/// The resulting array is of shape (height, width, colors, 1)
 fn create_state() -> Array<f32> {
     let dims = Dim4::new(&[game_size::HEIGHT, game_size::WIDTH, game_size::CHANNELS, 1]);
     let random_state = randu::<f32>(dims);
