@@ -99,6 +99,12 @@ fn main() {
 
 /// Implements Conway's Game of Life as described in the module description.
 fn conways_game_of_life() {
+    let win = Window::new(
+        window_size::WIDTH,
+        window_size::HEIGHT,
+        "Game of Life".to_string(),
+    );
+
     // Constant values. Note that `Dim4` is the dimension type available; values are [H, W, C, 1].
     let kernel = build_3x3_neighborhood_size_kernel();
     let const_2 = constant::<f32>(2.0, Dim4::new(&[1, 1, 1, 1])); // the value `2`
@@ -106,12 +112,6 @@ fn conways_game_of_life() {
 
     // Initial state.
     let mut state = create_state();
-
-    let win = Window::new(
-        window_size::WIDTH,
-        window_size::HEIGHT,
-        "Game of Life".to_string(),
-    );
 
     // Game loop.
     while !win.is_closed() {
