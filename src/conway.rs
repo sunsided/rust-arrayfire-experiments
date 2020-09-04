@@ -170,7 +170,11 @@ mod game {
             // Since the value of the a cell can be represented as 1 (live) and 0 (dead), using convolution
             // with a box kernel will give us the number of neighbors of any cell.
             // The center value of the kernel is 0 as we do not want to count the cell itself.
-            const KERNEL: [f32; 9] = [1.0, 1.0, 1.0, 1.0, 0.0, 1.0, 1.0, 1.0, 1.0];
+            #[rustfmt::skip]
+            const KERNEL: [f32; 9] =
+                [1.0, 1.0, 1.0,
+                 1.0, 0.0, 1.0,
+                 1.0, 1.0, 1.0];
             Array::new(&KERNEL, Dim4::new(&[3, 3, 1, 1]))
         }
 
