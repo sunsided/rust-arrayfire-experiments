@@ -95,77 +95,84 @@ fn main() {
         .expect("Duration since UNIX_EPOCH failed");
     set_seed(seed.as_secs());
 
-    conways_game_of_life();
-}
-
-/// Implements Conway's Game of Life as described in the module description.
-fn conways_game_of_life() {
     let win = Window::new(
         window_size::WIDTH,
         window_size::HEIGHT,
         "Game of Life".to_string(),
     );
 
-    // Constant values. Note that `Dim4` is the dimension type available; values are [H, W, C, 1].
-    let kernel = build_3x3_neighborhood_size_kernel();
-    let const_2 = constant::<f32>(2.0, Dim4::new(&[1, 1, 1, 1])); // the value `2`
-    let const_3 = constant::<f32>(3.0, Dim4::new(&[1, 1, 1, 1])); // the value `3`
-
-    // Initial state.
-    let mut state = create_state();
+    let mut conway = Conway::new(game_size::HEIGHT, game_size::WIDTH, game_size::CHANNELS);
 
     // Game loop.
     while !win.is_closed() {
-        state = update_state(state, &kernel, &const_2, &const_3);
-        win.draw_image(&normalise(&state), None);
+        let state = conway.update();
+        win.draw_image(&state, None);
     }
 }
 
-/// Updates the current state to the next state.
-fn update_state(
+/// The `Conway` struct holds game state for Conway's Game of Life.
+struct Conway {
+    neighborhood_kernel: Array<f32>,
+    value_2: Array<f32>,
+    value_3: Array<f32>,
     state: Array<f32>,
-    kernel: &Array<f32>,
-    const_2: &Array<f32>,
-    const_3: &Array<f32>,
-) -> Array<f32> {
-    let neighborhood = determine_neighborhood_size(&state, &kernel);
-    let can_exist = eq(&neighborhood, const_2, false);
-    let must_exist = eq(&neighborhood, const_3, false);
-    state * can_exist + must_exist
 }
 
-/// Builds a kernel to determine the size of a cell's neighborhood.
-fn build_3x3_neighborhood_size_kernel() -> Array<f32> {
-    // Since the value of the a cell can be represented as 1 (live) and 0 (dead), using convolution
-    // will give us the number of neighbors of any cell.
-    // The center value of the kernel is 0 as we do not want to count the cell itself.
-    const KERNEL: [f32; 9] = [1.0, 1.0, 1.0, 1.0, 0.0, 1.0, 1.0, 1.0, 1.0];
-    Array::new(&KERNEL, Dim4::new(&[3, 3, 1, 1]))
-}
+/// Implementation of Conway's Game of Life as outlined in the module description.
+impl Conway {
+    /// Creates a new instance of the `Conway` struct.
+    pub fn new(height: u64, width: u64, channels: u64) -> Self {
+        // Constant values. Note that `Dim4` is the dimension type available; values are [H, W, C, 1].
+        let kernel = Self::build_3x3_neighborhood_size_kernel();
+        let value_2 = constant::<f32>(2.0, Dim4::new(&[1, 1, 1, 1])); // the value `2`
+        let value_3 = constant::<f32>(3.0, Dim4::new(&[1, 1, 1, 1])); // the value `3`
 
-/// Determines the neighborhood size using the state obtained from
-/// `create_state` and the kernel obtained from `build_3x3_neighborhood_size_kernel`.
-fn determine_neighborhood_size(state: &Array<f32>, kernel: &Array<f32>) -> Array<f32> {
-    convolve2(state, kernel, ConvMode::DEFAULT, ConvDomain::SPATIAL)
-}
+        // Initial state.
+        let state = Self::create_state(height, width, channels);
 
-/// Creates the initial state by binarizing a uniform distribution.
-/// The resulting array is of shape (height, width, colors, 1)
-fn create_state() -> Array<f32> {
-    let dims = Dim4::new(&[game_size::HEIGHT, game_size::WIDTH, game_size::CHANNELS, 1]);
-    let random_state = randu::<f32>(dims);
-    binarize_state(random_state).cast::<f32>()
-}
+        Self {
+            neighborhood_kernel: kernel,
+            value_2,
+            value_3,
+            state,
+        }
+    }
 
-/// Takes a random floating-point state and applies a threshold to binarize it.
-fn binarize_state(state: Array<f32>) -> Array<bool> {
-    let threshold = constant::<f32>(0.5, Dim4::new(&[1, 1, 1, 1]));
-    gt(&state, &threshold, false)
-}
+    /// Updates the current state to the next state.
+    pub fn update(&mut self) -> &Array<f32> {
+        let n_size = Self::determine_neighborhood_size(&self.state, &self.neighborhood_kernel);
+        let can_exist = eq(&n_size, &self.value_2, false);
+        let must_exist = eq(&n_size, &self.value_3, false);
+        self.state = &self.state * can_exist + must_exist;
+        &self.state
+    }
 
-/// Normalize the specified array to be in range 0..1
-fn normalise(a: &Array<f32>) -> Array<f32> {
-    // Note that max_all returns a complex number; since the input is real, the second value is 0.
-    let sum = max_all(&abs(a)).0;
-    a / (sum as f32)
+    /// Builds a kernel to determine the size of a cell's neighborhood.
+    fn build_3x3_neighborhood_size_kernel() -> Array<f32> {
+        // Since the value of the a cell can be represented as 1 (live) and 0 (dead), using convolution
+        // will give us the number of neighbors of any cell.
+        // The center value of the kernel is 0 as we do not want to count the cell itself.
+        const KERNEL: [f32; 9] = [1.0, 1.0, 1.0, 1.0, 0.0, 1.0, 1.0, 1.0, 1.0];
+        Array::new(&KERNEL, Dim4::new(&[3, 3, 1, 1]))
+    }
+
+    /// Determines the neighborhood size using the state obtained from
+    /// `create_state` and the kernel obtained from `build_3x3_neighborhood_size_kernel`.
+    fn determine_neighborhood_size(state: &Array<f32>, kernel: &Array<f32>) -> Array<f32> {
+        convolve2(state, kernel, ConvMode::DEFAULT, ConvDomain::SPATIAL)
+    }
+
+    /// Creates the initial state by binarizing a uniform distribution.
+    /// The resulting array is of shape (height, width, colors, ??)
+    fn create_state(height: u64, width: u64, channels: u64) -> Array<f32> {
+        let dims = Dim4::new(&[height, width, channels, 1]);
+        let random_state = randu::<f32>(dims);
+        Self::binarize_state(random_state).cast::<f32>()
+    }
+
+    /// Takes a random floating-point state and applies a threshold to binarize it.
+    fn binarize_state(state: Array<f32>) -> Array<bool> {
+        let threshold = constant::<f32>(0.5, Dim4::new(&[1, 1, 1, 1]));
+        gt(&state, &threshold, false)
+    }
 }
