@@ -140,11 +140,22 @@ impl Conway {
 
     /// Updates the current state to the next state.
     pub fn update(&mut self) -> &Array<f32> {
-        let n_size = Self::determine_neighborhood_size(&self.state, &self.neighborhood_kernel);
+        let n_size = self.calculate_neighborhood_size();
         let can_exist = eq(&n_size, &self.value_2, false);
         let must_exist = eq(&n_size, &self.value_3, false);
         self.state = &self.state * can_exist + must_exist;
         &self.state
+    }
+
+    /// Determines the neighborhood size using the state obtained from
+    /// `create_state` and the kernel obtained from `build_3x3_neighborhood_size_kernel`.
+    fn calculate_neighborhood_size(&self) -> Array<f32> {
+        convolve2(
+            &self.state,
+            &self.neighborhood_kernel,
+            ConvMode::DEFAULT,
+            ConvDomain::SPATIAL,
+        )
     }
 
     /// Builds a kernel to determine the size of a cell's neighborhood.
@@ -154,12 +165,6 @@ impl Conway {
         // The center value of the kernel is 0 as we do not want to count the cell itself.
         const KERNEL: [f32; 9] = [1.0, 1.0, 1.0, 1.0, 0.0, 1.0, 1.0, 1.0, 1.0];
         Array::new(&KERNEL, Dim4::new(&[3, 3, 1, 1]))
-    }
-
-    /// Determines the neighborhood size using the state obtained from
-    /// `create_state` and the kernel obtained from `build_3x3_neighborhood_size_kernel`.
-    fn determine_neighborhood_size(state: &Array<f32>, kernel: &Array<f32>) -> Array<f32> {
-        convolve2(state, kernel, ConvMode::DEFAULT, ConvDomain::SPATIAL)
     }
 
     /// Creates the initial state by binarizing a uniform distribution.
