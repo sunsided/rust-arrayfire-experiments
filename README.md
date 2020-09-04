@@ -17,6 +17,11 @@ Don't expect anything crazy here. 🙌
   cargo run --bin conway
   ```
   
+- [white_noise.rs](src/white_noise.rs): Just white noise in a window. 
+  ```bash
+  cargo run --bin white-noise
+  ```
+  
 - [half_precision.rs](src/half_precision.rs): FP16 example using [half::f16](https://docs.rs/half/1.6.0/half/).
   Doesn't work on my GTX 980 Ti (Compute 5.2) with CUDA 10, driver 450 so I cannot actually test it. I keeping it as
   a bookmark anyways.

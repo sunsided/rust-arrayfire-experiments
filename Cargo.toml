@@ -17,6 +17,10 @@ path = "src/conway.rs"
 name = "half-precision"
 path = "src/half_precision.rs"
 
+[[bin]]
+name = "white-noise"
+path = "src/white_noise.rs"
+
 [dependencies]
 arrayfire = "3.7.0"
 half = "1.6.0"
