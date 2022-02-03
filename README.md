@@ -7,7 +7,7 @@ Don't expect anything crazy here. 🙌
 
 - [conway.rs](src/conway.rs): GPU-enabled [Conway's Game of Life](https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life) through
   kernel convolutions, taken from the `arrayfire-rust` examples and spiced up for readability and understandability.
-  Uses ArrayFire's graphics module to provide a window.
+  Uses ArrayFire's graphics module to provide a window. See [The Game of Life vs. Convolutions](https://medium.com/@sunside/the-game-of-life-vs-convolutions-bc495c962de8) for a post on it.
   ```bash
   cargo run
   cargo run --bin conway
